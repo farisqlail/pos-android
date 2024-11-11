@@ -12,14 +12,12 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi input
     if (!email || !password) {
       setError("Email and password are required.");
       return;
     }
 
     try {
-      // Lakukan login ke API (misalnya dengan POST request)
       const response = await fetch("https://your-api-url.com/login", {
         method: "POST",
         headers: {
@@ -32,8 +30,7 @@ const LoginPage = () => {
         throw new Error("Login failed. Please check your credentials.");
       }
 
-      // Redirect setelah login berhasil
-      router.push("/dashboard"); // Ganti dengan halaman yang sesuai setelah login berhasil
+      router.push("/dashboard"); 
     } catch (error: any) {
       setError(error.message || "An unexpected error occurred.");
     }
