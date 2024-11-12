@@ -8,7 +8,7 @@ import { Input } from "@nextui-org/react";
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 
-const SalesPage = () => {
+const HomePage = () => {
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <Navbar />
@@ -29,20 +29,12 @@ const SalesPage = () => {
                         <span className="font-semibold">Menu</span>
                     </div>
 
-                    <div className="flex flex-col gap-2 mt-3 mb-3">
+                    <div className="flex flex-col gap-2 mt-3 mb-3 border border-black rounded-lg p-3">
                         <div className="flex justify-between items-center">
                             <div className="flex gap-2">
-                                <Image
-                                    src="/images/products.jpg"
-                                    width={60}
-                                    height={60}
-                                    alt="product"
-                                    className="rounded-lg"
-                                    priority
-                                />
                                 <div className="flex flex-col gap-2">
                                     <span className="font-semibold">Sate Ayam</span>
-                                    <small className="text-green-500">Rp. 20.000</small>
+                                    <span className="text-green-500 ">Rp. 20.000</span>
                                 </div>
                             </div>
 
@@ -56,20 +48,12 @@ const SalesPage = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 mt-3 mb-3">
+                    <div className="flex flex-col gap-2 mt-3 mb-3 border border-black rounded-lg p-3">
                         <div className="flex justify-between items-center">
                             <div className="flex gap-2">
-                                <Image
-                                    src="/images/products.jpg"
-                                    width={60}
-                                    height={60}
-                                    alt="product"
-                                    className="rounded-lg"
-                                    priority
-                                />
                                 <div className="flex flex-col gap-2">
                                     <span className="font-semibold">Sate Ayam</span>
-                                    <small className="text-green-500">Rp. 20.000</small>
+                                    <span className="text-green-500 ">Rp. 20.000</span>
                                 </div>
                             </div>
 
@@ -90,4 +74,4 @@ const SalesPage = () => {
     );
 };
 
-export default SalesPage;
+export default HomePage;

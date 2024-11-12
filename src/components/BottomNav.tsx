@@ -12,8 +12,8 @@ const BottomNav: React.FC = () => {
         <div>
             <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black text-white">
                 <div className="flex justify-around items-center h-16">
-                    <Link href="/" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/" ? "text-white" : "text-gray-400"} text-xs`}>
+                    <Link href="/home" className="flex flex-col items-center space-y-1">
+                        <span className={`${router.pathname === "/home" ? "text-white" : "text-gray-400"} text-xs`}>
                             <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
 
@@ -23,8 +23,8 @@ const BottomNav: React.FC = () => {
                             </svg>
                         </span>
                     </Link>
-                    <Link href="/cart" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/cart" ? "text-white" : "text-gray-400"} text-xs`}>
+                    <Link href="/menu" className="flex flex-col items-center space-y-1">
+                        <span className={`${router.pathname === "/menu" ? "text-white" : "text-gray-400"} text-xs`}>
                             <svg fill="#ffffff" width="30px" height="30px" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg">
 
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
@@ -44,8 +44,8 @@ const BottomNav: React.FC = () => {
                             </svg>
                         </span>
                     </Link>
-                    <Link href="/profile" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/profile" ? "text-white" : "text-gray-400"} text-xs`}>
+                    <Link href="/promo" className="flex flex-col items-center space-y-1">
+                        <span className={`${router.pathname === "/promo" ? "text-white" : "text-gray-400"} text-xs`}>
                             <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -77,6 +77,12 @@ const BottomNav: React.FC = () => {
                                     </div>
                                     <div className="border-b pb-3 text-black mt-3 cursor-pointer">
                                         Riwayat Transaksi
+                                    </div>
+                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer">
+                                        Pengguna
+                                    </div>
+                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer">
+                                        Pembayaran
                                     </div>
                                 </div>
                             </ModalBody>
