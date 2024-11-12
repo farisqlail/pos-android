@@ -84,6 +84,9 @@ const BottomNav: React.FC = () => {
                                     <div className="border-b pb-3 text-black mt-3 cursor-pointer">
                                         Pembayaran
                                     </div>
+                                    <div className="border-b pb-3 text-red-500 mt-3 cursor-pointer">
+                                        Keluar
+                                    </div>
                                 </div>
                             </ModalBody>
                             <ModalFooter>
