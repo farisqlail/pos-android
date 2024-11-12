@@ -11,13 +11,14 @@ const Navbar = () => {
     return (
         <div className="flex flex-col h-fit">
             <div className="flex justify-between items-center p-4 text-black">
-                <div className="font-semibold text-md text-black flex gap-2">
+                <div className="font-semibold text-md text-black flex items-center gap-2">
                     <div>
-                        
+                        <Image src="/icons/logo.png" width={30} height={30} priority alt="logo" />
                     </div>
                     Warung Sate Muslim
                 </div>
-                <div className="border rounded-full p-1">
+
+                <div className="border border-black rounded-full p-2">
                     <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0" />
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />

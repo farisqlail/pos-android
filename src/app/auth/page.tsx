@@ -39,7 +39,7 @@ const LoginPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h3 className="text-2xl font-semibold text-center mb-4 text-black">Login</h3>
+        <h3 className="text-2xl font-semibold text-center mb-4 text-black">Masuk</h3>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
@@ -51,8 +51,8 @@ const LoginPage = () => {
             <input
               type="email"
               id="email"
-              placeholder="Enter your email"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="email@gmail.com"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-black"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -66,8 +66,8 @@ const LoginPage = () => {
             <input
               type="password"
               id="password"
-              placeholder="Enter your password"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="password"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -76,9 +76,9 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full bg-black text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            Login
+            Masuk
           </button>
         </form>
       </div>
