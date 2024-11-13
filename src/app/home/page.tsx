@@ -1,23 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { Input } from "@nextui-org/react";
+
 import { getResource } from "@/services/fetch";
 
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 
+interface Menu {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+}
+
+interface CartItem extends Menu {
+    quantity: number;
+}
+
 const HomePage = () => {
-    const [menus, setMenus] = useState<any[]>([]);
+    const [menus, setMenus] = useState<Menu[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [cart, setCart] = useState<any[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [, setCart] = useState<CartItem[]>([]);
 
     useEffect(() => {
         const fetchMenus = async () => {
             try {
-                const data = await getResource("menus", "your-token");
+                const data = await getResource<{ data: Menu[] }>("menus");
                 setMenus(data.data);
                 setLoading(false);
             } catch (error) {
@@ -31,10 +42,9 @@ const HomePage = () => {
     useEffect(() => {
         const savedCart = localStorage.getItem("cart");
         if (savedCart) {
-            setCart(JSON.parse(savedCart));
+          setCart(JSON.parse(savedCart));
         }
-    }, []);
-
+      }, []);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -44,9 +54,9 @@ const HomePage = () => {
         menu.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleAddToCart = (menu: any) => {
-        const currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
-        const itemIndex = currentCart.findIndex((item: any) => item.id === menu.id);
+    const handleAddToCart = (menu: Menu) => {
+        const currentCart = JSON.parse(localStorage.getItem("cart") || "[]") as CartItem[];
+        const itemIndex = currentCart.findIndex((item) => item.id === menu.id);
 
         if (itemIndex !== -1) {
             currentCart[itemIndex].quantity += 1;

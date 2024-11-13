@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+
+interface CartItem {
+    name: string;
+    quantity: number;
+}
 
 const Navbar = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState<CartItem[]>([]);
 
     const getCartData = () => {
-        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]"); 
         setCart(cartData);
     };
 

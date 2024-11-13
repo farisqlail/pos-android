@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { postResource } from "@/services/fetch";
 
 const LoginPage = () => {
@@ -16,10 +15,9 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      const response = await postResource("login", { email, password }, "");
-      if (response) {
+      const response = await postResource("login", { email, password });
+      if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
-        
         router.push("/home");
       }
     } catch (err) {

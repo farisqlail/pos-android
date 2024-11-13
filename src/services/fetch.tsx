@@ -1,6 +1,10 @@
+interface CustomError extends Error {
+  status?: number;
+}
+
 const BASE_URL = "https://laildev.my.id/public/api";
 
-export async function getResource<T>(endpoint: string, token: string): Promise<T> {
+export async function getResource<T>(endpoint: string): Promise<T> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "GET",
@@ -11,8 +15,8 @@ export async function getResource<T>(endpoint: string, token: string): Promise<T
     });
 
     if (!response.ok) {
-      const error = new Error("An error occurred while fetching the resource.");
-      (error as any).status = response.status;
+      const error = new Error("An error occurred while fetching the resource.") as CustomError;
+      error.status = response.status;
       throw error;
     }
 
@@ -24,7 +28,7 @@ export async function getResource<T>(endpoint: string, token: string): Promise<T
   }
 }
 
-export async function postResource<T>(endpoint: string, data: T, token: string): Promise<T> {
+export async function postResource(endpoint: string, data: object): Promise<{ data: object }> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "POST",
@@ -41,15 +45,15 @@ export async function postResource<T>(endpoint: string, data: T, token: string):
     }
 
     const responseData = await response.json();
-    return responseData;
+    return { data: responseData }; // Wrap the response in a 'data' property
   } catch (error) {
     console.error("Error creating resource:", error);
     throw error;
   }
 }
 
-// Fungsi untuk PATCH resource (update)
-export async function updateResource<T>(endpoint: string, data: T, token: string): Promise<T> {
+
+export async function updateResource<T>(endpoint: string, data: T): Promise<T> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "PATCH",
@@ -61,7 +65,8 @@ export async function updateResource<T>(endpoint: string, data: T, token: string
     });
 
     if (!response.ok) {
-      const error = new Error("An error occurred while updating the resource.");
+      const error = new Error("An error occurred while fetching the resource.") as CustomError;
+      error.status = response.status;
       throw error;
     }
 
@@ -73,8 +78,7 @@ export async function updateResource<T>(endpoint: string, data: T, token: string
   }
 }
 
-// Fungsi untuk DELETE resource
-export async function deleteResource(endpoint: string, token: string): Promise<void> {
+export async function deleteResource(endpoint: string): Promise<void> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "DELETE",
@@ -85,7 +89,8 @@ export async function deleteResource(endpoint: string, token: string): Promise<v
     });
 
     if (!response.ok) {
-      const error = new Error("An error occurred while deleting the resource.");
+      const error = new Error("An error occurred while fetching the resource.") as CustomError;
+      error.status = response.status;
       throw error;
     }
   } catch (error) {

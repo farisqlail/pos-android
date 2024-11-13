@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 const BottomNav: React.FC = () => {
-    const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     return (
@@ -13,7 +11,7 @@ const BottomNav: React.FC = () => {
             <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black text-white">
                 <div className="flex justify-around items-center h-16">
                     <Link href="/home" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/home" ? "text-white" : "text-gray-400"} text-xs`}>
+                        <span>
                             <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
 
@@ -24,7 +22,7 @@ const BottomNav: React.FC = () => {
                         </span>
                     </Link>
                     <Link href="/menu" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/menu" ? "text-white" : "text-gray-400"} text-xs`}>
+                        <span>
                             <svg fill="#ffffff" width="30px" height="30px" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg">
 
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
@@ -45,7 +43,7 @@ const BottomNav: React.FC = () => {
                         </span>
                     </Link>
                     <Link href="/promo" className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/promo" ? "text-white" : "text-gray-400"} text-xs`}>
+                        <span>
                             <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -54,7 +52,7 @@ const BottomNav: React.FC = () => {
                         </span>
                     </Link>
                     <div onClick={onOpen} className="flex flex-col items-center space-y-1">
-                        <span className={`${router.pathname === "/settings" ? "text-white" : "text-gray-400"} text-xs`}>
+                        <span>
                             <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -67,7 +65,7 @@ const BottomNav: React.FC = () => {
 
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <ModalHeader className="flex flex-col gap-1 text-black">Lainnya</ModalHeader>
                             <ModalBody>
