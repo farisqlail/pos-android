@@ -1,4 +1,4 @@
-const BASE_URL = "https://myprofit-pwa-api.azurewebsites.net/api";
+const BASE_URL = "https://laildev.my.id/public/api";
 
 export async function getResource<T>(endpoint: string, token: string): Promise<T> {
   try {
@@ -6,7 +6,6 @@ export async function getResource<T>(endpoint: string, token: string): Promise<T
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: token,
         "Content-Type": "application/json",
       },
     });
@@ -25,14 +24,12 @@ export async function getResource<T>(endpoint: string, token: string): Promise<T
   }
 }
 
-// Fungsi untuk POST resource
 export async function postResource<T>(endpoint: string, data: T, token: string): Promise<T> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
-        Authorization: `${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -58,7 +55,6 @@ export async function updateResource<T>(endpoint: string, data: T, token: string
       method: "PATCH",
       headers: {
         Accept: "application/json",
-        Authorization: `${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -84,7 +80,6 @@ export async function deleteResource(endpoint: string, token: string): Promise<v
       method: "DELETE",
       headers: {
         Accept: "application/json",
-        Authorization: `${token}`,
         "Content-Type": "application/json",
       },
     });

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { postResource } from "@/services/fetch";
+
 const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -11,28 +13,18 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setError("Email and password are required.");
-      return;
-    }
+    setError(null);
 
     try {
-      const response = await fetch("https://your-api-url.com/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
+      const response = await postResource("login", { email, password }, "");
+      if (response) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        
+        router.push("/home");
       }
-
-      router.push("/dashboard"); 
-    } catch (error: any) {
-      setError(error.message || "An unexpected error occurred.");
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+      console.error("Login error:", err);
     }
   };
 
