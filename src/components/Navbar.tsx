@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
@@ -9,11 +10,12 @@ interface CartItem {
 }
 
 const Navbar = () => {
+    const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [cart, setCart] = useState<CartItem[]>([]);
 
     const getCartData = () => {
-        const cartData = JSON.parse(localStorage.getItem("cart") || "[]"); 
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
         setCart(cartData);
     };
 
@@ -29,6 +31,9 @@ const Navbar = () => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
+    const toCheckout = () => {
+        router.push("/checkout");
+    }
 
     return (
         <div>
@@ -117,7 +122,7 @@ const Navbar = () => {
                                     <button className="border border-black rounded-lg p-3 text-black w-full" onClick={onClose}>Batal</button>
                                     <button
                                         className={`bg-black rounded-lg p-3 w-full ${cart.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
-                                        onClick={onClose}
+                                        onClick={toCheckout}
                                         disabled={cart.length === 0}
                                     >
                                         Checkout

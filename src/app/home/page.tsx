@@ -23,7 +23,8 @@ const HomePage = () => {
     const [menus, setMenus] = useState<Menu[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [, setCart] = useState<CartItem[]>([]);
+    const [
+        , setCart] = useState<CartItem[]>([]);
 
     useEffect(() => {
         const fetchMenus = async () => {
