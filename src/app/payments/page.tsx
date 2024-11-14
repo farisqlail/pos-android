@@ -1,33 +1,27 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
 
 import NavbarPayment from "@/components/NavbarPayment";
 
-interface CartItem {
-    name: string;
-    quantity: number;
-}
+// interface CartItem {
+//     name: string;
+//     quantity: number;
+// }
 
 const PaymentPage = () => {
-    const [cart, setCart] = useState<CartItem[]>([]);
+    const router = useRouter();
+    // const [cart, setCart] = useState<CartItem[]>([]);
 
-    const getCartData = () => {
-        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-        setCart(cartData);
-    };
+    // const getCartData = () => {
+    //     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+    //     setCart(cartData);
+    // };
 
-    useEffect(() => {
-        getCartData();
-        const interval = setInterval(getCartData, 2000);
-        return () => clearInterval(interval);
-    }, []);
-
-    const handleRemoveFromCart = (index: number) => {
-        const updatedCart = cart.filter((_, i) => i !== index);
-        setCart(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-    };
+    const toRecipt = () => {
+        router.push("/receipt");
+    }
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
@@ -40,7 +34,7 @@ const PaymentPage = () => {
 
             <div className="flex flex-col pl-4 pr-4">
                 <span className="font-semibold">Pilih Tipe Pembayaran</span>
-                <div className="bg-white shadow-md rounded-lg mt-4 p-2 flex gap-2 items-center cursor-pointer">
+                <div className="bg-white shadow-md rounded-lg mt-4 p-2 flex gap-2 items-center cursor-pointer" onClick={toRecipt}>
                     <div className="bg-violet-700 p-2 rounded-lg">
                         <svg fill="#ffffff" width="25px" height="25px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                             <g id="SVGRepo_bgCarrier" stroke-width="0" />
