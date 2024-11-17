@@ -45,7 +45,7 @@ export async function postResource(endpoint: string, data: object): Promise<{ da
     }
 
     const responseData = await response.json();
-    return { data: responseData }; // Wrap the response in a 'data' property
+    return { data: responseData }; 
   } catch (error) {
     console.error("Error creating resource:", error);
     throw error;
@@ -56,7 +56,7 @@ export async function postResource(endpoint: string, data: object): Promise<{ da
 export async function updateResource<T>(endpoint: string, data: T): Promise<T> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
