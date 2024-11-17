@@ -1,10 +1,16 @@
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 const BottomNav: React.FC = () => {
+    const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+    const toNavigation = (url: string) => {
+        router.push(url);
+    }
 
     return (
         <div>
@@ -76,7 +82,7 @@ const BottomNav: React.FC = () => {
                                     <div className="border-b pb-3 text-black mt-3 cursor-pointer">
                                         Riwayat Transaksi
                                     </div>
-                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer">
+                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer" onClick={() => toNavigation("/users")}>
                                         Pengguna
                                     </div>
                                     <div className="border-b pb-3 text-black mt-3 cursor-pointer">
