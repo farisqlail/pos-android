@@ -23,6 +23,10 @@ const PaymentPage = () => {
         router.push("/receipt");
     }
 
+    const toQris = () => {
+        router.push("/qris")
+    }
+
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <NavbarPayment title="Pembayaran" route="/checkout" />
@@ -44,7 +48,7 @@ const PaymentPage = () => {
                     </div>
                     <span className="font-normal">Tunai</span>
                 </div>
-                <div className="bg-white shadow-md rounded-lg mt-4 p-2 flex gap-2 items-center cursor-pointer">
+                <div className="bg-white shadow-md rounded-lg mt-4 p-2 flex gap-2 items-center cursor-pointer" onClick={toQris}>
                     <div className="bg-red-700 p-2 rounded-lg">
                         <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0" />

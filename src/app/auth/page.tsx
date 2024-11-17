@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { postResource } from "@/services/fetch";
 
@@ -10,6 +10,13 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (localStorage.getItem("user")) {
+      router.push("/home");
+    }
+  }, [router]);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
