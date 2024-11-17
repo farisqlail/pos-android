@@ -12,8 +12,8 @@ import BottomNav from "@/components/BottomNav";
 interface MenuItem {
     id: number;
     name: string;
-    price: number;
-    stock: number;
+    price: string;
+    stock: string;
 }
 
 const MenuPage = () => {
@@ -82,7 +82,7 @@ const MenuPage = () => {
         }
     };
 
-    const openModalEdit = (item: any) => {
+    const openModalEdit = (item: MenuItem) => {
         setIdProduct(item.id);
         setName(item.name);
         setPrice(item.price);

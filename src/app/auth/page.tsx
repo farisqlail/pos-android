@@ -11,7 +11,6 @@ const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
     if (localStorage.getItem("user")) {
       router.push("/home");
     }

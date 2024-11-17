@@ -70,7 +70,7 @@ const UsersPage = () => {
         }
     };
 
-    const openModalEdit = (item: any) => {
+    const openModalEdit = (item: UsersItem) => {
         setIdUser(item.id);
         setName(item.name);
         setEmail(item.email);
