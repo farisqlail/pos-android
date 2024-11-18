@@ -34,7 +34,6 @@ const UsersPage = () => {
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-
     useEffect(() => {
         const fetch = async () => {
             try {

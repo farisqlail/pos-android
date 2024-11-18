@@ -85,7 +85,7 @@ const BottomNav: React.FC = () => {
                                     <div className="border-b pb-3 text-black mt-3 cursor-pointer" onClick={() => toNavigation("/users")}>
                                         Pengguna
                                     </div>
-                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer">
+                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer" onClick={() => toNavigation("/payments/list")}>
                                         Pembayaran
                                     </div>
                                     <div className="border-b pb-3 text-red-500 mt-3 cursor-pointer">
