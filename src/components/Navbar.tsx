@@ -35,6 +35,19 @@ const Navbar = () => {
         router.push("/checkout");
     }
 
+    const updateQuantity = (index: number, action: "increase" | "decrease") => {
+        const updatedCart = [...cart];
+
+        if (action === "increase") {
+            updatedCart[index].quantity += 1;
+        } else if (action === "decrease" && updatedCart[index].quantity > 1) {
+            updatedCart[index].quantity -= 1;
+        }
+
+        setCart(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+    };
+
     return (
         <div>
             <div className="flex flex-col h-fit">
@@ -88,27 +101,45 @@ const Navbar = () => {
                                 <div className="flex flex-col">
                                     {cart.length > 0 ? (
                                         cart.map((item, index) => (
-                                            <div key={index} className="border-b pb-3 text-black cursor-pointer flex justify-between items-center">
+                                            <div key={index} className="border-b pb-3 text-black cursor-pointer flex justify-between items-center pt-3">
                                                 <div className="flex gap-2">
-                                                    <span className="font-semibold">{item.name}</span> |
-                                                    <span>{item.quantity}</span>
+                                                    <span className="font-semibold">{item.name}</span>
                                                 </div>
 
-                                                <div
-                                                    className="border rounded-full p-1 border-[#e60000] cursor-pointer"
-                                                    onClick={() => handleRemoveFromCart(index)}
-                                                >
-                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                                                        <g id="SVGRepo_iconCarrier">
-                                                            <path d="M9.17065 4C9.58249 2.83481 10.6937 2 11.9999 2C13.3062 2 14.4174 2.83481 14.8292 4" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
-                                                            <path d="M20.5 6H3.49988" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
-                                                            <path d="M18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5M18.8334 8.5L18.6334 11.5" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
-                                                            <path d="M9.5 11L10 16" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
-                                                            <path d="M14.5 11L14 16" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
-                                                        </g>
-                                                    </svg>
+                                                <div className="flex gap-2">
+                                                    <div className="flex justify-between items-center gap-2 border border-black rounded-full w-[80px]">
+                                                        <button
+                                                            className="pt-1 pb-1 pl-2 pr-2"
+                                                            onClick={() => updateQuantity(index, "decrease")}
+                                                            disabled={item.quantity <= 1}
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <span>{item.quantity}</span>
+                                                        <button
+                                                            className="pt-1 pb-1 pl-2 pr-2"
+                                                            onClick={() => updateQuantity(index, "increase")}
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+
+                                                    <div
+                                                        className="border rounded-full p-1 border-[#e60000] cursor-pointer flex items-center"
+                                                        onClick={() => handleRemoveFromCart(index)}
+                                                    >
+                                                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <g id="SVGRepo_iconCarrier">
+                                                                <path d="M9.17065 4C9.58249 2.83481 10.6937 2 11.9999 2C13.3062 2 14.4174 2.83481 14.8292 4" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M20.5 6H3.49988" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5M18.8334 8.5L18.6334 11.5" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M9.5 11L10 16" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M14.5 11L14 16" stroke="#e60000" stroke-width="1.5" stroke-linecap="round" />
+                                                            </g>
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))
@@ -121,7 +152,7 @@ const Navbar = () => {
                                 <div className="flex gap-2 w-full">
                                     <button className="border border-black rounded-lg p-3 text-black w-full" onClick={onClose}>Batal</button>
                                     <button
-                                        className={`bg-black rounded-lg p-3 w-full ${cart.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
+                                        className={`bg-black rounded-lg p-3 w-full text-white ${cart.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
                                         onClick={toCheckout}
                                         disabled={cart.length === 0}
                                     >

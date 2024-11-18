@@ -3,24 +3,54 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { getResource } from "@/services/fetch";
+
 import NavbarPayment from "@/components/NavbarPayment";
 
 interface CartItem {
     name: string;
     quantity: number;
+    price: number;
+}
+
+interface PromoItem {
+    id: number;
+    name: string;
+    discount: number;
 }
 
 const CheckoutPage = () => {
     const router = useRouter();
     const [cart, setCart] = useState<CartItem[]>([]);
+    const [promoItems, setPromoItem] = useState<PromoItem[]>([]);
+    const [promo, setPromo] = useState(0);
+    const [selectedPromoId, setSelectedPromoId] = useState<number | null>(null);
 
     const getCartData = () => {
         const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
         setCart(cartData);
     };
 
+    const calculateTotals = () => {
+        const subTotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const grandTotal = subTotal - promo;
+        return { subTotal, grandTotal: Math.max(grandTotal, 0) };
+    };
+
+    const { subTotal, grandTotal } = calculateTotals();
+
     useEffect(() => {
         getCartData();
+        const fetch = async () => {
+            try {
+                const data = await getResource<{ data: PromoItem[] }>("promos");
+                setPromoItem(data.data);
+            } catch (error) {
+                console.log("Error fetching menus:", error);
+            }
+        };
+
+        fetch();
         const interval = setInterval(getCartData, 2000);
         return () => clearInterval(interval);
     }, []);
@@ -32,8 +62,24 @@ const CheckoutPage = () => {
     };
 
     const toPayment = () => {
+        const dataCheckout = {
+            total: grandTotal,
+            subTotal: subTotal,
+            promo: promo,
+            products: cart
+        }
+
+        localStorage.setItem("dataCheckout", JSON.stringify(dataCheckout));
         router.push("/payments")
     }
+
+    const applyPromo = (promoId: number) => {
+        const selectedPromo = promoItems.find((item) => item.id === promoId);
+        setSelectedPromoId(promoId);
+        if (selectedPromo) {
+            setPromo(selectedPromo.discount);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
@@ -41,16 +87,23 @@ const CheckoutPage = () => {
 
             <span className="font-semibold pl-4">Pakai Promo</span>
             <div className="pl-4 pt-2 pr-2 flex gap-2 overflow-x-auto whitespace-nowrap">
-                <div className="p-3 border border-black flex gap-2 items-center rounded-lg">
-                    <span className="font-semibold">Promo saber kilat 50%</span>
-                    <button className="bg-orange-400 p-2 rounded-lg text-white
-                    ">Pakai</button>
-                </div>
-                <div className="p-3 border border-black flex gap-2 items-center rounded-lg">
-                    <span className="font-semibold">Promo saber kilat 50%</span>
-                    <button className="bg-orange-400 p-2 rounded-lg text-white
-                    ">Pakai</button>
-                </div>
+                {promoItems.map((promo) => (
+                    <div
+                        key={promo.id}
+                        className="p-3 border border-black flex gap-2 items-center rounded-lg"
+                    >
+                        <span className="font-semibold">{promo.name} | Rp.{promo.discount.toLocaleString("id-ID")}</span>
+                        <button
+                            className={`p-2 rounded-lg text-white ${selectedPromoId === promo.id
+                                ? "bg-green-500"
+                                : "bg-orange-400"
+                                }`}
+                            onClick={() => applyPromo(promo.id)}
+                        >
+                            {selectedPromoId === promo.id ? "Dipakai" : "Pakai"}
+                        </button>
+                    </div>
+                ))}
             </div>
 
             <div className="bg-white shadow-md ml-4 mr-4 rounded-lg mt-4 pt-4">
@@ -93,15 +146,15 @@ const CheckoutPage = () => {
                     <span className="font-semibold">Total Belanja</span>
                     <div className="flex justify-between">
                         <span>Sub total</span>
-                        <span>Rp. 20.000</span>
+                        <span>Rp. {subTotal.toLocaleString("id-ID")}</span>
                     </div>
                     <div className="flex justify-between">
                         <span>Promo</span>
-                        <span className="text-red-500">- Rp. 10.000</span>
+                        <span className="text-red-500">- Rp. {promo.toLocaleString("id-ID")}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="font-semibold">Grand total</span>
-                        <span className="font-semibold">Rp. 10.000</span>
+                        <span className="font-semibold">Rp. {grandTotal.toLocaleString("id-ID")}</span>
                     </div>
                 </div>
 

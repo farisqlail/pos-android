@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
+import Image from "next/image";
 
 import { getResource } from "@/services/fetch";
 
@@ -25,6 +26,7 @@ const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [
         , setCart] = useState<CartItem[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchMenus = async () => {
@@ -43,9 +45,9 @@ const HomePage = () => {
     useEffect(() => {
         const savedCart = localStorage.getItem("cart");
         if (savedCart) {
-          setCart(JSON.parse(savedCart));
+            setCart(JSON.parse(savedCart));
         }
-      }, []);
+    }, []);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -68,11 +70,25 @@ const HomePage = () => {
 
         setCart(currentCart);
         localStorage.setItem("cart", JSON.stringify(currentCart));
+
+        setIsModalOpen(true);
+        setTimeout(() => {
+            setIsModalOpen(false);
+        }, 1500);
     };
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <Navbar />
+
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-4 rounded-lg shadow-lg text-center flex flex-col justify-center items-center">
+                        <Image src="/images/success-cart.png" width={200} height={200} alt="illustration" />
+                        <p className="text-black font-semibold">Item berhasil ditambahkan ke keranjang!</p>
+                    </div>
+                </div>
+            )}
 
             <div className="w-full p-4">
                 <Input

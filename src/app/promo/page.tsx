@@ -141,7 +141,7 @@ const PromoPage = () => {
                 ) : (
                     filteredPromoItems.map((item) => (
                         <div key={item.id} className="p-4 border border-black rounded-lg flex justify-between items-center">
-                            <span className="font-semibold">{item.name} | {item.discount}%</span>
+                            <span className="font-semibold">{item.name} | Rp.{item.discount}</span>
                             <div className="flex gap-2">
                                 <div className="border rounded-full p-1 border-black" onClick={() => openModalEdit(item)}>
                                     <svg width="30px" height="30px" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
