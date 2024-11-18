@@ -1,23 +1,21 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import NavbarPayment from "@/components/NavbarPayment";
 
-// interface CartItem {
-//     name: string;
-//     quantity: number;
-// }
-
 const PaymentPage = () => {
     const router = useRouter();
-    // const [cart, setCart] = useState<CartItem[]>([]);
+    const [total, setTotal] = useState<string>("");
 
-    // const getCartData = () => {
-    //     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-    //     setCart(cartData);
-    // };
+    useEffect(() => {
+        const dataCheckout = localStorage.getItem("dataCheckout");
+        if (dataCheckout) {
+            const parsedData = JSON.parse(dataCheckout);
+            setTotal(parsedData.total.toString());
+        }
+    }, []);
 
     const toRecipt = () => {
         router.push("/receipt");
@@ -33,7 +31,7 @@ const PaymentPage = () => {
 
             <div className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-center items-center ml-4 mr-4 mb-4">
                 <span className="font-semibold text-lg">Total pembayaran</span>
-                <span className="font-semibold text-lg">Rp. 10.000</span>
+                <span className="font-semibold text-lg">Rp. {total}</span>
             </div>
 
             <div className="flex flex-col pl-4 pr-4">
