@@ -33,7 +33,7 @@ const ReceiptPage = () => {
         window.open(url);  
         localStorage.removeItem("cart");
         localStorage.removeItem("dataCheckout");
-        localStorage.removeItem("datatransaction");
+        localStorage.removeItem("dataTransaction");
         router.push("/home")
     }
 
