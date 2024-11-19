@@ -1,17 +1,86 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image"
 import { useRouter } from "next/navigation";
 
+import { postResource } from "@/services/fetch";
+
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
+
+interface CartItem {
+    id_menu: number;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+interface CheckoutItem {
+    promo: number;
+    subTotal: number;
+    total: number
+}
 
 const QrisPage = () => {
     const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [dataCheckout, setDataCheckout] = useState<CheckoutItem | null>(null);
+    const [total, setTotal] = useState<string>("");
+    const [userId, setUserid] = useState<string>("");
 
-    const toReceipt = () => {
-        router.push("/receipt")
+    useEffect(() => {
+        const dataCheckout = localStorage.getItem("dataCheckout");
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+        const user = localStorage.getItem("user");
+
+        if (dataCheckout) {
+            const parsedData = JSON.parse(dataCheckout);
+            setTotal(parsedData.total.toString());
+            setDataCheckout(parsedData);
+        }
+
+        if (user) {
+            try {
+                const parsedUser = JSON.parse(user);
+                setUserid(parsedUser.id);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+            }
+        }
+
+        const updatedCartData = cartData.map((item: any) => ({
+            ...item,
+            id_menu: item.id,
+        }));
+
+        setCart(updatedCartData);
+    }, []);
+
+    const toReceipt = async () => {
+        const dataTransaction = {
+            menus: cart,
+            user_id: userId,
+            total: 20000,
+            status_payment: "paid",
+            status_transactions: "pending",
+            discount_amount: dataCheckout?.promo,
+            id_promo: 1,
+            payment: "tunai"
+        }
+
+        try {
+            const data = await postResource("transactions/create", dataTransaction);
+
+            if (data) {
+                localStorage.setItem("dataTransaction", JSON.stringify(data.data));
+                router.push("/receipt");
+            } else {
+                console.log("Ada yang salah");
+            }
+        } catch (error) {
+            console.error("Error menambahkan menu:", error);
+        }
     }
 
     return (
@@ -19,7 +88,7 @@ const QrisPage = () => {
             <div className="font-semibold flex flex-col justify-center items-center bg-white shadow-md p-4 rounded-lg">
                 <Image src="/images/qris.png" width={250} height={250} alt="logo" priority />
                 <p className="mt-2 text-black">Total harga : </p>
-                <span className="text-xl text-black">Rp. 20.000</span>
+                <span className="text-xl text-black">Rp. {total}</span>
             </div>
 
 
@@ -35,7 +104,7 @@ const QrisPage = () => {
                         <>
                             <ModalHeader className="flex flex-col gap-1 text-black">Jumlah Pembayaran</ModalHeader>
                             <ModalBody>
-                                <Input type="number" value="20000" readOnly />
+                                <Input type="number" value={total} readOnly />
                             </ModalBody>
                             <ModalFooter>
                                 <Button className="bg-black text-white w-full" onClick={toReceipt}>
