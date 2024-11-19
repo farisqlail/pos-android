@@ -9,7 +9,7 @@ import { postResource } from "@/services/fetch";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 
 interface CartItem {
-    id_menu: number;
+    id: number;
     name: string;
     quantity: number;
     price: number;
@@ -49,7 +49,7 @@ const QrisPage = () => {
             }
         }
 
-        const updatedCartData = cartData.map((item: any) => ({
+        const updatedCartData = cartData.map((item: CartItem) => ({
             ...item,
             id_menu: item.id,
         }));

@@ -8,7 +8,7 @@ import { postResource } from "@/services/fetch";
 import NavbarPayment from "@/components/NavbarPayment";
 
 interface CartItem {
-    id_menu: number;
+    id: number;
     name: string;
     quantity: number;
     price: number;
@@ -47,7 +47,7 @@ const PaymentPage = () => {
             }
         }
 
-        const updatedCartData = cartData.map((item: any) => ({
+        const updatedCartData = cartData.map((item: CartItem) => ({
             ...item,
             id_menu: item.id,
         }));
