@@ -2,7 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { postResource } from "@/services/fetch";
+import { loginResource } from "@/services/fetch";
+
+interface LoginResponse {
+  data: {
+    data: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+    };
+  };
+}
 
 const LoginPage = () => {
   const router = useRouter();
@@ -15,13 +26,13 @@ const LoginPage = () => {
       router.push("/home");
     }
   }, [router]);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const response = await postResource("login", { email, password });
+      const response = await loginResource<LoginResponse>("login", { email, password });
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
         router.push("/home");

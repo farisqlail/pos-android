@@ -1,18 +1,51 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 
+interface TransactionItem {
+    no_nota: string;
+    grand_total: number;
+    payment: number;
+    date_payment: string;
+}
+
 const ReceiptPage = () => {
     const router = useRouter();
+    const [phoneNumber, setPhoneNumber] = useState("");
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [dataTransaction, setDataTransaction] = useState<TransactionItem | null>(null);
+
+    useEffect(() => {
+        const dataTransaction = localStorage.getItem("dataTransaction");
+        if (dataTransaction) {
+            const parsedData = JSON.parse(dataTransaction);
+            setDataTransaction(parsedData.data)
+        }
+    }, [])
 
     const toHome = () => {
+        const message = "Halo, saya ingin menanyakan tentang produk Anda.";
+        const formattedPhoneNumber = `62${phoneNumber.replace(/[^0-9]/g, '')}`;
+        const url = `https://wa.me/${formattedPhoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(url);  
         localStorage.removeItem("cart");
+        localStorage.removeItem("dataCheckout");
+        localStorage.removeItem("datatransaction");
         router.push("/home")
     }
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    };
+
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col justify-center items-center gap-1 text-black w-full p-4">
@@ -28,19 +61,19 @@ const ReceiptPage = () => {
                 <div className="flex flex-col gap-2 w-full mt-4">
                     <div className="flex justify-between items-center">
                         <span>Nomor Nota</span>
-                        <span>09098908098</span>
+                        <span>{dataTransaction?.no_nota}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span>Tanggal Transaksi</span>
-                        <span>12-12-2024</span>
+                        <span>{dataTransaction?.date_payment ? formatDate(dataTransaction.date_payment) : "No date"}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span>Tipe Pembayaran</span>
-                        <span>Tunai</span>
+                        <span>{dataTransaction?.payment}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span>Total</span>
-                        <span className="font-semibold">Rp. 10.000</span>
+                        <span className="font-semibold">Rp. {dataTransaction?.grand_total}</span>
                     </div>
                 </div>
             </div>
@@ -57,7 +90,13 @@ const ReceiptPage = () => {
                         <>
                             <ModalHeader className="flex flex-col gap-1 text-black">Tulis Nomor</ModalHeader>
                             <ModalBody>
-                                <Input type="number" placeholder="08523xxxxxxx" />
+                                <Input
+                                    type="text" 
+                                    placeholder="08523xxxxxxx"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                />
+
                             </ModalBody>
                             <ModalFooter>
                                 <Button className="bg-black text-white w-full" onPress={toHome}>

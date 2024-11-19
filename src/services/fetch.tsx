@@ -28,6 +28,30 @@ export async function getResource<T>(endpoint: string): Promise<T> {
   }
 }
 
+export async function loginResource<T>(endpoint: string, data: object): Promise<T> {
+  try {
+    const response = await fetch(`${BASE_URL}/${endpoint}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = new Error("An error occurred while posting the resource.");
+      throw error;
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error creating resource:", error);
+    throw error;
+  }
+}
+
 export async function postResource(endpoint: string, data: object): Promise<{ data: object }> {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {

@@ -3,22 +3,82 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { postResource } from "@/services/fetch";
+
 import NavbarPayment from "@/components/NavbarPayment";
+
+interface CartItem {
+    id_menu: number;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+interface CheckoutItem {
+    promo: number;
+    subTotal: number;
+    total: number
+}
 
 const PaymentPage = () => {
     const router = useRouter();
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [dataCheckout, setDataCheckout] = useState<CheckoutItem | null>(null);
     const [total, setTotal] = useState<string>("");
+    const [userId, setUserid] = useState<string>("");
 
     useEffect(() => {
         const dataCheckout = localStorage.getItem("dataCheckout");
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+        const user = localStorage.getItem("user");
+
         if (dataCheckout) {
             const parsedData = JSON.parse(dataCheckout);
             setTotal(parsedData.total.toString());
+            setDataCheckout(parsedData);
         }
+
+        if (user) {
+            try {
+                const parsedUser = JSON.parse(user);
+                setUserid(parsedUser.id);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+            }
+        }
+
+        const updatedCartData = cartData.map((item: any) => ({
+            ...item,
+            id_menu: item.id,
+        }));
+
+        setCart(updatedCartData);
     }, []);
 
-    const toRecipt = () => {
-        router.push("/receipt");
+    const toRecipt = async () => {
+        const dataTransaction = {
+            menus: cart,
+            user_id: userId,
+            total: 20000,
+            status_payment: "paid",
+            status_transactions: "pending",
+            discount_amount: dataCheckout?.promo,
+            id_promo: 1,
+            payment: "tunai"
+        }
+
+        try {
+            const data = await postResource("transactions/create", dataTransaction);
+            
+            if (data) {
+                localStorage.setItem("dataTransaction", JSON.stringify(data.data));
+                router.push("/receipt");
+            } else {
+                console.log("Ada yang salah");
+            }
+        } catch (error) {
+            console.error("Error menambahkan menu:", error);
+        }
     }
 
     const toQris = () => {
