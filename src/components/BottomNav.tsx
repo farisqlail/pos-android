@@ -103,7 +103,7 @@ const BottomNav: React.FC = () => {
                             <ModalBody>
                                 <div className="flex flex-col">
                                     {userRole == "owner" && (
-                                        <div className="border-b pb-3 text-black cursor-pointer">
+                                        <div className="border-b pb-3 text-black cursor-pointer" onClick={() => toNavigation("/dashboard")}>
                                             Dashboard
                                         </div>
                                     )}

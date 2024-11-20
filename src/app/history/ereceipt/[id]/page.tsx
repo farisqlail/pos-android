@@ -30,7 +30,7 @@ interface TransactionDetail {
 
 const HistoryDetail: React.FC = () => {
     const params = useParams();
-    const [isLoading, setIsLoading] = useState(true);
+    const [, setIsLoading] = useState(true);
     const [transactionDetail, setTransactionDetail] = useState<TransactionDetail | null>(null);
 
     useEffect(() => {
@@ -39,8 +39,6 @@ const HistoryDetail: React.FC = () => {
             try {
                 const data = await getResource<TransactionDetail>(`transactions/${params.id}`);
                 setTransactionDetail(data);
-                console.log("tt", data);
-
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             } finally {

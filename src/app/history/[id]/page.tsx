@@ -34,7 +34,7 @@ interface TransactionDetail {
 const HistoryDetail: React.FC = () => {
     const router = useRouter();
     const params = useParams();
-    const [isLoading, setIsLoading] = useState(true);
+    const [, setIsLoading] = useState(true);
     const [transactionDetail, setTransactionDetail] = useState<TransactionDetail | null>(null);
 
     useEffect(() => {

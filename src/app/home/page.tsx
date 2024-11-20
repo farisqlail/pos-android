@@ -37,7 +37,7 @@ const HomePage = () => {
         , setCart] = useState<CartItem[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userRole, setUserRole] = useState<string>("");
-    const [selectedDate, setSelectedDate] = useState<string>(() => {
+    const [selectedDate, ] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
