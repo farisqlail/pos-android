@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { getResource } from "@/services/fetch";
@@ -17,7 +16,6 @@ interface Transaction {
 }
 
 const HistoryPage: React.FC = () => {
-    const router = useRouter();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedDate, setSelectedDate] = useState<string>(() => {

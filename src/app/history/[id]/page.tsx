@@ -63,14 +63,19 @@ const HistoryDetail: React.FC = () => {
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <Navbar />
 
-            <div className="flex gap-2 ml-4 mb-4 items-center cursor-pointer" onClick={toHistory}>
-                <svg fill="#000000" width="30px" height="30px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                    <g id="SVGRepo_iconCarrier"> <path d="M23.505 0c0.271 0 0.549 0.107 0.757 0.316 0.417 0.417 0.417 1.098 0 1.515l-14.258 14.264 14.050 14.050c0.417 0.417 0.417 1.098 0 1.515s-1.098 0.417-1.515 0l-14.807-14.807c-0.417-0.417-0.417-1.098 0-1.515l15.015-15.022c0.208-0.208 0.486-0.316 0.757-0.316z" /> </g>
+            <div className="flex justify-between items-center ml-4 mr-4 mb-4 cursor-pointer" onClick={toHistory}>
+                <div className="flex gap-2 items-center">
+                    <svg fill="#000000" width="30px" height="30px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+                        <g id="SVGRepo_iconCarrier"> <path d="M23.505 0c0.271 0 0.549 0.107 0.757 0.316 0.417 0.417 0.417 1.098 0 1.515l-14.258 14.264 14.050 14.050c0.417 0.417 0.417 1.098 0 1.515s-1.098 0.417-1.515 0l-14.807-14.807c-0.417-0.417-0.417-1.098 0-1.515l15.015-15.022c0.208-0.208 0.486-0.316 0.757-0.316z" /> </g>
 
-                </svg>
-                <span>Kembali</span>
+                    </svg>
+                    <span>Kembali</span>
+                </div>
+                <div className="bg-yellow-500 p-2 rounded-lg text-white">
+                    Proses
+                </div>
             </div>
 
             <div className="ml-4 mr-4 bg-white p-4 rounded-lg shadow-lg">
