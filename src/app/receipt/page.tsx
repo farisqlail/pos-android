@@ -27,10 +27,10 @@ const ReceiptPage = () => {
     }, [])
 
     const toHome = () => {
-        const message = "Halo, saya ingin menanyakan tentang produk Anda.";
+        const message = "Halo, saya ingin menanyakan tentang produk Anda." + `https://pos-android.vercel.app/history/ereceipt/${dataTransaction?.no_nota}`;
         const formattedPhoneNumber = `62${phoneNumber.replace(/[^0-9]/g, '')}`;
         const url = `https://wa.me/${formattedPhoneNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url);  
+        window.open(url);
         localStorage.removeItem("cart");
         localStorage.removeItem("dataCheckout");
         localStorage.removeItem("dataTransaction");
@@ -91,7 +91,7 @@ const ReceiptPage = () => {
                             <ModalHeader className="flex flex-col gap-1 text-black">Tulis Nomor</ModalHeader>
                             <ModalBody>
                                 <Input
-                                    type="text" 
+                                    type="text"
                                     placeholder="08523xxxxxxx"
                                     value={phoneNumber}
                                     onChange={(e) => setPhoneNumber(e.target.value)}
