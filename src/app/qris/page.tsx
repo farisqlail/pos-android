@@ -66,7 +66,7 @@ const QrisPage = () => {
             status_transactions: "pending",
             discount_amount: dataCheckout?.promo,
             id_promo: 1,
-            payment: "tunai"
+            payment: "qris"
         }
 
         try {
