@@ -47,7 +47,7 @@ const HistoryDetail: React.FC = () => {
         };
 
         fetchTransactions();
-    }, []);
+    }, [params.id]);
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black flex flex-col justify-center gap-2 items-center pl-4 pr-4 ">

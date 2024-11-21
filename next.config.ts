@@ -10,11 +10,18 @@ const pwaConfig = withPWA({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config) => {
+  webpack(config, { isServer }) {
     config.module.rules.push({
-      test: /\.(ttf|woff|woff2|eot|otf|pdf)$/,
-      type: 'asset/resource',
+      test: /\.(eot|woff|woff2|ttf|otf|svg|png|jpg|jpeg|gif|bmp|ico)$/,
     });
+
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'core-js/library/fn': 'core-js/stable',
+      };
+    }
+
     return config;
   },
   ...pwaConfig,

@@ -47,7 +47,6 @@ const DashboardPage: React.FC = () => {
             const canvas = await html2canvas(content as HTMLElement, { scale: 2 });
             const imgData = canvas.toDataURL("image/png");
             const imgWidth = 190;
-            const pageHeight = 297;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
             doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);

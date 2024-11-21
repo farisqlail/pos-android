@@ -62,7 +62,7 @@ const HistoryDetail: React.FC = () => {
         };
 
         fetchTransactions();
-    }, []);
+    }, [params.id]);
 
     const toHistory = () => {
         router.push("/history")
