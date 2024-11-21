@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 
-import { getResource } from "@/services/fetch";
+import { getResource, updateResource } from "@/services/fetch";
 
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
@@ -35,16 +35,25 @@ const HistoryDetail: React.FC = () => {
     const router = useRouter();
     const params = useParams();
     const [, setIsLoading] = useState(true);
+    const [userRole, setUserRole] = useState<string>("");
     const [transactionDetail, setTransactionDetail] = useState<TransactionDetail | null>(null);
 
     useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (user) {
+            try {
+                const parsedUser = JSON.parse(user);
+                setUserRole(parsedUser.role);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+            }
+        }
+
         const fetchTransactions = async () => {
             setIsLoading(true);
             try {
                 const data = await getResource<TransactionDetail>(`transactions/${params.id}`);
                 setTransactionDetail(data);
-                console.log("tt", data);
-
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             } finally {
@@ -57,6 +66,29 @@ const HistoryDetail: React.FC = () => {
 
     const toHistory = () => {
         router.push("/history")
+    }
+
+    const updateStatus = async () => {
+        const dataUpdate = {
+            status_transaction: transactionDetail?.status_transaction == "pending" ? "proses" : "completed"
+        }
+        const fetchTransactions = async () => {
+            setIsLoading(true);
+            try {
+                const data = await updateResource(`transactions/${params.id}/status`, dataUpdate);
+                if (data) {
+                    router.push(`/history/${params.id}`);
+                } else {
+                    console.log("Ada yang salah");
+                }
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTransactions();
     }
 
     return (
@@ -73,9 +105,23 @@ const HistoryDetail: React.FC = () => {
                     </svg>
                     <span>Kembali</span>
                 </div>
-                <div className="bg-yellow-500 p-2 rounded-lg text-white">
-                    Proses
-                </div>
+                {userRole == "kitchen" && (
+                    <>
+                        {transactionDetail?.status_transaction == "pending" ? (
+                            <div className="bg-yellow-500 p-2 rounded-lg text-white" onClick={updateStatus}>
+                                Proses
+                            </div>
+                        ) : (
+                            <>
+                                {transactionDetail?.status_transaction !== "completed" && (
+                                    <div className="bg-blue-500 p-2 rounded-lg text-white" onClick={updateStatus}>
+                                        Selesai
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </>
+                )}
             </div>
 
             <div className="ml-4 mr-4 bg-white p-4 rounded-lg shadow-lg">
@@ -103,7 +149,7 @@ const HistoryDetail: React.FC = () => {
                     </div>
                     <div className="flex flex-col gap-1 w-[300px] max-w-[300px]">
                         <span className="text-gray-500">Status</span>
-                        <span className="text-sm">{transactionDetail?.status_transaction}</span>
+                        <span className="text-sm">{transactionDetail?.status_transaction == "completed" ? "selesai" : transactionDetail?.status_transaction}</span>
                     </div>
                 </div>
                 <div className="flex gap-2 mt-2">

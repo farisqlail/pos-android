@@ -10,6 +10,13 @@ const pwaConfig = withPWA({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(ttf|woff|woff2|eot|otf|pdf)$/,
+      type: 'asset/resource',
+    });
+    return config;
+  },
   ...pwaConfig,
 };
 

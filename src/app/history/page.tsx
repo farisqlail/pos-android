@@ -85,7 +85,7 @@ const HistoryPage: React.FC = () => {
                                             : "bg-yellow-600"
                                             }`}
                                     >
-                                        {transaction.status_transaction}
+                                        {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
                                     </span>
                                 </div>
 

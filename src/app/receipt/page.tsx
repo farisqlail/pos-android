@@ -27,7 +27,7 @@ const ReceiptPage = () => {
     }, [])
 
     const toHome = () => {
-        const message = "Halo, saya ingin menanyakan tentang produk Anda." + `http://pos-android.vercel.app/history/ereceipt/${dataTransaction?.no_nota}`;
+        const message = "Halo, saya ingin menanyakan tentang produk Anda. " + `http://pos-android.vercel.app/history/ereceipt/${dataTransaction?.no_nota}`;
         const formattedPhoneNumber = `62${phoneNumber.replace(/[^0-9]/g, '')}`;
         const url = `https://wa.me/${formattedPhoneNumber}?text=${encodeURIComponent(message)}`;
         window.open(url);

@@ -53,7 +53,7 @@ const BottomNav: React.FC = () => {
                             </svg>
                         </span>
                     </Link>
-                    <div onClick={() => toNavigation("/home")} className="flex flex-col items-center space-y-1">
+                    <div onClick={() => toNavigation("/menu")} className="flex flex-col items-center space-y-1">
                         <span>
                             <svg fill="#ffffff" width="30px" height="30px" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg">
 

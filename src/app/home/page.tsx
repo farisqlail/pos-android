@@ -37,7 +37,7 @@ const HomePage = () => {
         , setCart] = useState<CartItem[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userRole, setUserRole] = useState<string>("");
-    const [selectedDate, ] = useState<string>(() => {
+    const [selectedDate,] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
@@ -246,7 +246,7 @@ const HomePage = () => {
                                                 : "bg-yellow-600"
                                                 }`}
                                         >
-                                            {transaction.status_transaction}
+                                            {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
                                         </span>
                                     </div>
 
