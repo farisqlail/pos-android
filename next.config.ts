@@ -24,6 +24,14 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  rules: [
+    {
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false, 
+      },
+    },
+  ],
   ...pwaConfig,
 };
 

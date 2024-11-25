@@ -28,6 +28,13 @@ interface Transaction {
     status_transaction: string;
 }
 
+interface TransactionDashboard {
+    total_transactions: number;
+    total_items_sold: number;
+    total_revenue: number;
+}
+
+
 const HomePage = () => {
     const [menus, setMenus] = useState<Menu[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -37,6 +44,17 @@ const HomePage = () => {
         , setCart] = useState<CartItem[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userRole, setUserRole] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
+    const [transactionDetail, setTransactionDetail] = useState<TransactionDashboard | null>(null);
+    const [startDate, setStartDate] = useState<string>(() => {
+        const today = new Date();
+        today.setDate(today.getDate() - 7);
+        return today.toISOString().split("T")[0];
+    });
+    const [endDate, setEndDate] = useState<string>(() => {
+        const today = new Date();
+        return today.toISOString().split("T")[0];
+    });
     const [selectedDate,] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
@@ -81,6 +99,33 @@ const HomePage = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await getResource<TransactionDashboard>(
+                    `dashboard-data?start_date=${startDate}&end_date=${endDate}`
+                );
+                setTransactionDetail(data);
+            } catch (err) {
+                console.error("Error fetching transactions:", err);
+                setError("Gagal mengambil data transaksi.");
+                setTransactionDetail(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (new Date(startDate) > new Date(endDate)) {
+            setError("Tanggal awal tidak boleh lebih besar dari tanggal akhir.");
+            setTransactionDetail(null);
+            return;
+        }
+
+        fetchTransactions();
+    }, [startDate, endDate]);
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
@@ -122,40 +167,144 @@ const HomePage = () => {
                 </div>
             )}
 
-            <div className="w-full p-4">
-                <Input
-                    type="email"
-                    variant="bordered"
-                    className="text-black"
-                    placeholder="cari makanan atau minuman ..."
-                    startContent={
-                        <svg
-                            width="30px"
-                            height="30px"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            stroke="#1c1c1c"
-                        >
-                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-                                    stroke="#666666"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                />
-                            </g>
-                        </svg>
-                    }
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </div>
+            {userRole !== "owner" && (
+                <div className="w-full p-4">
+                    <Input
+                        type="text"
+                        variant="bordered"
+                        className="text-black"
+                        placeholder="cari makanan atau minuman ..."
+                        startContent={
+                            <svg
+                                width="30px"
+                                height="30px"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                stroke="#1c1c1c"
+                            >
+                                <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                                        stroke="#666666"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </g>
+                            </svg>
+                        }
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
+                </div>
+            )}
 
-            {userRole !== "kitchen" ? (
+            {userRole == "kitchen" ? (
+                <>
+                    <div className="flex flex-col gap-3 ml-4 mr-4 mb-[100px]">
+                        <div className="mb-3">
+                            <span className="font-semibold">Transaksi butuh diproses</span>
+                        </div>
+                        {loading ? (
+                            <div className="space-y-4">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className="p-3 shadow-lg rounded-lg bg-gray-300 animate-pulse h-24"
+                                    ></div>
+                                ))}
+                            </div>
+                        ) : transactions.length > 0 ? (
+                            transactions.map((transaction) => (
+                                <Link href={`/history/${transaction.no_nota}`} key={transaction.no_nota}>
+                                    <div className="p-3 shadow-lg rounded-lg hover:bg-gray-100 cursor-pointer">
+                                        <div className="flex justify-between items-center">
+                                            <span>{transaction.no_nota}</span>
+                                            <span
+                                                className={`rounded-full pl-3 pr-3 pt-[1px] pb-[1px] text-white ${transaction.status_transaction === "completed"
+                                                    ? "bg-green-600"
+                                                    : "bg-yellow-600"
+                                                    }`}
+                                            >
+                                                {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-3">
+                                            <span className="font-semibold text-lg">
+                                                Rp. {parseInt(transaction.grand_total).toLocaleString("id-ID")}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500">Tidak ada transaksi.</p>
+                        )}
+                    </div>
+                </>
+            ) : userRole === "owner" ? (
+                <>
+                    <div className="flex flex-col gap-3 ml-4 mr-4">
+                        <span className="font-semibold">Rekap Transaksi</span>
+                    </div>
+
+                    <div className="w-full p-4">
+                        <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
+                            Pilih Rentang Tanggal
+                        </label>
+                        <div className="flex gap-4">
+                            <input
+                                id="start-date"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="mt-1 block w-full p-2 rounded-md border border-black shadow-sm sm:text-sm"
+                                max={new Date().toISOString().split("T")[0]}
+                            />
+                            <input
+                                id="end-date"
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="mt-1 block w-full p-2 rounded-md border border-black shadow-sm sm:text-sm"
+                                max={new Date().toISOString().split("T")[0]}
+                            />
+                        </div>
+                        {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+                    </div>
+
+                    <div id="dashboard-content" className="flex flex-col gap-1 ml-4 mr-4">
+                        {loading ? (
+                            <div className="text-center mt-4">Loading data...</div>
+                        ) : transactionDetail ? (
+                            <>
+                                <div className="flex gap-2">
+                                    <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
+                                        <span className="font-semibold">Transaksi</span>
+                                        <span>{transactionDetail?.total_transactions}</span>
+                                    </div>
+                                    <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
+                                        <span className="font-semibold">Produk Terjual</span>
+                                        <span>{transactionDetail?.total_items_sold}</span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 bg-white p-4 rounded-lg flex flex-col gap-1 shadow-lg">
+                                    <span className="font-semibold">Total Pendapatan</span>
+                                    <span>Rp. {transactionDetail?.total_revenue}</span>
+                                </div>
+                            </>
+                        ) : (
+                            !loading && <p className="text-center mt-4">Tidak ada data untuk rentang tanggal ini.</p>
+                        )}
+                    </div>
+                </>
+            ) : userRole == "cashier" && (
                 <div className="flex flex-col gap-2 pl-4 pr-4">
                     <div className="flex flex-col">
                         <div className="border-b pb-2">
@@ -198,15 +347,15 @@ const HomePage = () => {
                                                     fill="none"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                 >
-                                                    <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
                                                     <g id="SVGRepo_iconCarrier">
                                                         <path
                                                             d="M6 12H18M12 6V18"
                                                             stroke="#0d0d0d"
-                                                            stroke-width="2"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         />
                                                     </g>
                                                 </svg>
@@ -219,49 +368,6 @@ const HomePage = () => {
                             )}
                         </div>
                     </div>
-                </div>
-            ) : (
-                <div className="flex flex-col gap-3 ml-4 mr-4 mb-[100px]">
-                    <div className="mb-3">
-                        <span className="font-semibold">Transaksi butuh diproses</span>
-                    </div>
-                    {loading ? (
-                        <div className="space-y-4">
-                            {Array.from({ length: 5 }).map((_, index) => (
-                                <div
-                                    key={index}
-                                    className="p-3 shadow-lg rounded-lg bg-gray-300 animate-pulse h-24"
-                                ></div>
-                            ))}
-                        </div>
-                    ) : transactions.length > 0 ? (
-                        transactions.map((transaction) => (
-                            <Link href={`/history/${transaction.no_nota}`} key={transaction.no_nota}>
-                                <div className="p-3 shadow-lg rounded-lg hover:bg-gray-100 cursor-pointer">
-                                    <div className="flex justify-between items-center">
-                                        <span>{transaction.no_nota}</span>
-                                        <span
-                                            className={`rounded-full pl-3 pr-3 pt-[1px] pb-[1px] text-white ${transaction.status_transaction === "completed"
-                                                ? "bg-green-600"
-                                                : "bg-yellow-600"
-                                                }`}
-                                        >
-                                            {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-3">
-                                        <span className="font-semibold text-lg">
-                                            Rp. {parseInt(transaction.grand_total).toLocaleString("id-ID")}
-                                        </span>
-                                    </div>
-                                </div>
-                            </Link>
-
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-500">Tidak ada transaksi.</p>
-                    )}
                 </div>
             )}
 

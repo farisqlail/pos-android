@@ -20,9 +20,9 @@ const NavbarPayment: React.FC<NavbarPaymentProps> = ({ title, route }) => {
                     <div className="font-semibold text-md text-black flex items-center gap-2">
                         <div onClick={navigateToRoute}>
                             <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                                <g id="SVGRepo_iconCarrier"> <path d="M15 7L10 12L15 17" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /> </g>
+                                <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+                                <g id="SVGRepo_iconCarrier"> <path d="M15 7L10 12L15 17" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /> </g>
                             </svg>
                         </div>
                         <span className="font-semibold">{title}</span>
