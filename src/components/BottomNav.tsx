@@ -22,12 +22,12 @@ const BottomNav: React.FC = () => {
     }, [])
 
     const toNavigation = (url: string) => {
-        if (userRole == "owner") {
+        if (userRole === "owner" || userRole === "cashier") {
             router.push(url);
         } else {
             router.push("/unauthorized");
         }
-    }
+    };
 
     const toHistory = () => {
         router.push("/history");
