@@ -66,15 +66,25 @@ const DashboardPage: React.FC = () => {
         const content = document.querySelector("#dashboard-content");
 
         if (content) {
-            const canvas = await html2canvas(content as HTMLElement, { scale: 2 });
-            const imgData = canvas.toDataURL("image/png");
-            const imgWidth = 190;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const originalClass = content.className;
+            content.className = originalClass.replace("hidden", "block");
 
-            doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-            doc.save("dashboard.pdf");
+            try {
+                const canvas = await html2canvas(content as HTMLElement, { scale: 2 });
+                const imgData = canvas.toDataURL("image/png");
+                const imgWidth = 190;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+                doc.save("Rekap data-" + startDate + "-" + endDate + ".pdf");
+            } catch (error) {
+                console.error("Error while generating PDF:", error);
+            } finally {
+                content.className = originalClass;
+            }
         }
     };
+
 
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
@@ -105,7 +115,7 @@ const DashboardPage: React.FC = () => {
                 {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
             </div>
 
-            <div id="dashboard-content" className="flex flex-col gap-1 ml-4 mr-4">
+            <div className="flex flex-col gap-1 ml-4 mr-4">
                 {loading ? (
                     <div className="text-center mt-4">Loading data...</div>
                 ) : transactionDetail ? (
@@ -140,6 +150,38 @@ const DashboardPage: React.FC = () => {
                 ) : (
                     !loading && <p className="text-center mt-4">Tidak ada data untuk rentang tanggal ini.</p>
                 )}
+            </div>
+
+            <div id="dashboard-content" className="flex flex-col gap-1 ml-4 mr-4 hidden">
+                <div className="flex gap-2 justify-between">
+                    <span>Mulai : {startDate}</span>
+                    <span>Sampai : {endDate}</span>
+                </div>
+
+                <div className="mt-4 bg-white shadow-lg rounded-lg p-4">
+                    <table className="table-auto w-full text-left">
+                        <thead>
+                            <tr>
+                                <th className="px-4 py-2 font-semibold border-b">Kategori</th>
+                                <th className="px-4 py-2 font-semibold border-b">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td className="px-4 py-2 border-b">Produk Terlaris</td>
+                                <td className="px-4 py-2 border-b">{transactionDetail?.top_selling_product}</td>
+                            </tr>
+                            <tr>
+                                <td className="px-4 py-2 border-b">Promo Banyak Terpakai</td>
+                                <td className="px-4 py-2 border-b">{transactionDetail?.top_promotion}</td>
+                            </tr>
+                            <tr>
+                                <td className="px-4 py-2">Total Pendapatan</td>
+                                <td className="px-4 py-2">Rp. {transactionDetail?.total_revenue}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div className="fixed bottom-20 left-0 right-0 flex flex-col gap-3">

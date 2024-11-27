@@ -32,6 +32,8 @@ interface TransactionDashboard {
     total_transactions: number;
     total_items_sold: number;
     total_revenue: number;
+    top_selling_product: string;
+    top_promotion: string;
 }
 
 
@@ -291,6 +293,17 @@ const HomePage = () => {
                                     <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
                                         <span className="font-semibold">Produk Terjual</span>
                                         <span>{transactionDetail?.total_items_sold}</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-2 mt-3">
+                                    <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
+                                        <span className="font-semibold">Produk Terlaris</span>
+                                        <span>{transactionDetail?.top_selling_product}</span>
+                                    </div>
+                                    <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
+                                        <span className="font-semibold">Promo Banyak Terpakai</span>
+                                        <span>{transactionDetail?.top_promotion}</span>
                                     </div>
                                 </div>
 
