@@ -24,19 +24,19 @@ interface Transaction {
 
 const SummaryPage: React.FC = () => {
     const [transactionDetail, setTransactionDetail] = useState<Transaction | null>(null);
-    const [startDate, setStartDate] = useState<string>(() => {
+    const [startDate, ] = useState<string>(() => {
         const today = new Date();
         today.setDate(today.getDate() - 7);
         return today.toISOString().split("T")[0];
     });
 
-    const [endDate, setEndDate] = useState<string>(() => {
+    const [endDate, ] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const [, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchTransactions = async () => {

@@ -92,7 +92,7 @@ const HomePage = () => {
         };
 
         fetchMenus();
-    }, []);
+    }, [selectedDate]);
 
     useEffect(() => {
         const savedCart = localStorage.getItem("cart");
