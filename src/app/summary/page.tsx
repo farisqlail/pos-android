@@ -22,15 +22,7 @@ interface Transaction {
     }
 }
 
-interface ListTransaction {
-    id: number;
-    no_nota: string;
-    grand_total: string;
-    status_transaction: string;
-}
-
 const SummaryPage: React.FC = () => {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [transactionDetail, setTransactionDetail] = useState<Transaction | null>(null);
     const [startDate, setStartDate] = useState<string>(() => {
         const today = new Date();
