@@ -125,7 +125,11 @@ const HomePage = () => {
             return;
         }
 
-        fetchTransactions();
+        const intervalId = setInterval(() => {
+            fetchTransactions();
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [startDate, endDate]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,30 +224,31 @@ const HomePage = () => {
                                 ))}
                             </div>
                         ) : transactions.length > 0 ? (
-                            transactions.map((transaction) => (
-                                <Link href={`/history/${transaction.no_nota}`} key={transaction.no_nota}>
-                                    <div className="p-3 shadow-lg rounded-lg hover:bg-gray-100 cursor-pointer">
-                                        <div className="flex justify-between items-center">
-                                            <span>{transaction.no_nota}</span>
-                                            <span
-                                                className={`rounded-full pl-3 pr-3 pt-[1px] pb-[1px] text-white ${transaction.status_transaction === "completed"
-                                                    ? "bg-green-600"
-                                                    : "bg-yellow-600"
-                                                    }`}
-                                            >
-                                                {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
-                                            </span>
-                                        </div>
+                            transactions
+                                .filter(transaction => transaction.status_transaction !== "completed") // Filter transaksi
+                                .map(transaction => (
+                                    <Link href={`/history/${transaction.no_nota}`} key={transaction.no_nota}>
+                                        <div className="p-3 shadow-lg rounded-lg hover:bg-gray-100 cursor-pointer">
+                                            <div className="flex justify-between items-center">
+                                                <span>{transaction.no_nota}</span>
+                                                <span
+                                                    className={`rounded-full pl-3 pr-3 pt-[1px] pb-[1px] text-white ${transaction.status_transaction === "completed"
+                                                        ? "bg-green-600"
+                                                        : "bg-yellow-600"
+                                                        }`}
+                                                >
+                                                    {transaction?.status_transaction == "completed" ? "selesai" : transaction?.status_transaction}
+                                                </span>
+                                            </div>
 
-                                        <div className="mt-3">
-                                            <span className="font-semibold text-lg">
-                                                Rp. {parseInt(transaction.grand_total).toLocaleString("id-ID")}
-                                            </span>
+                                            <div className="mt-3">
+                                                <span className="font-semibold text-lg">
+                                                    Rp. {parseInt(transaction.grand_total).toLocaleString("id-ID")}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-
-                            ))
+                                    </Link>
+                                ))
                         ) : (
                             <p className="text-center text-gray-500">Tidak ada transaksi.</p>
                         )}

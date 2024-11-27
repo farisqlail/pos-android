@@ -122,6 +122,9 @@ const BottomNav: React.FC = () => {
                                             </div>
                                         </>
                                     )}
+                                    <div className="border-b pb-3 text-black mt-3 cursor-pointer" onClick={() => toNavigation("/summary")}>
+                                        Rekap Harian
+                                    </div>
                                     <div className="border-b pb-3 text-red-500 mt-3 cursor-pointer" onClick={logout}>
                                         Keluar
                                     </div>
