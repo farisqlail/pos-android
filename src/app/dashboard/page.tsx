@@ -62,6 +62,7 @@ const DashboardPage: React.FC = () => {
     }, [startDate, endDate]);
 
     const printPDF = async () => {
+        setLoading(true); 
         const doc = new jsPDF();
         const content = document.querySelector("#dashboard-content");
 
@@ -76,19 +77,25 @@ const DashboardPage: React.FC = () => {
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
                 doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-                doc.save("Rekap data-" + startDate + "-" + endDate + ".pdf");
+                doc.save(`Rekap data-${startDate}-${endDate}.pdf`);
             } catch (error) {
                 console.error("Error while generating PDF:", error);
             } finally {
                 content.className = originalClass;
+                setLoading(false);
             }
         }
     };
 
-
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <Navbar />
+
+            {loading && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="text-white text-lg font-semibold">Sedang memproses, harap tunggu...</div>
+                </div>
+            )}
 
             <div className="w-full p-4">
                 <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
