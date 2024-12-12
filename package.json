@@ -11,7 +11,9 @@
   "dependencies": {
     "@internationalized/date": "3.5.6",
     "@nextui-org/react": "2.4.8",
+    "@types/chart.js": "^2.9.41",
     "@types/next-pwa": "5.6.9",
+    "chart.js": "2.9.3",
     "core-js": "^3.39.0",
     "framer-motion": "11.11.11",
     "html2canvas": "1.4.1",

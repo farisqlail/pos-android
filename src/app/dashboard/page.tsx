@@ -1,14 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import Chart from "chart.js";
 
 import { getResource } from "@/services/fetch";
 
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
+
+interface TransactionDaily {
+    date: string;
+    count: number;
+}
 
 interface Transaction {
     total_transactions: number;
@@ -16,6 +22,7 @@ interface Transaction {
     total_revenue: number;
     top_selling_product: string;
     top_promotion: string;
+    daily_transactions: Array<TransactionDaily>
 }
 
 const DashboardPage: React.FC = () => {
@@ -25,6 +32,10 @@ const DashboardPage: React.FC = () => {
         today.setDate(today.getDate() - 7);
         return today.toISOString().split("T")[0];
     });
+    const transactionsPerDay = [
+        { date: "2024-12-01", count: 5 },
+        { date: "2024-12-02", count: 3 },
+    ];
 
     const [endDate, setEndDate] = useState<string>(() => {
         const today = new Date();
@@ -33,6 +44,7 @@ const DashboardPage: React.FC = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -61,8 +73,51 @@ const DashboardPage: React.FC = () => {
         fetchTransactions();
     }, [startDate, endDate]);
 
+    useEffect(() => {
+        if (chartRef.current && transactionDetail?.daily_transactions) {
+            const ctx = chartRef.current.getContext("2d");
+            if (ctx) {
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: transactionDetail.daily_transactions.map((data) => data.date),
+                        datasets: [
+                            {
+                                label: "Jumlah Transaksi",
+                                data: transactionDetail.daily_transactions.map((data) => data.count),
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            position: "top",
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    display: true,
+                                    gridLines: { display: false },
+                                },
+                            ],
+                            yAxes: [
+                                {
+                                    display: true,
+                                    ticks: { beginAtZero: true },
+                                },
+                            ],
+                        },
+                    },
+                });
+            }
+        }
+    }, [transactionsPerDay]);
+
     const printPDF = async () => {
-        setLoading(true); 
+        setLoading(true);
         const doc = new jsPDF();
         const content = document.querySelector("#dashboard-content");
 
@@ -122,7 +177,7 @@ const DashboardPage: React.FC = () => {
                 {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
             </div>
 
-            <div className="flex flex-col gap-1 ml-4 mr-4">
+            <div className="flex flex-col gap-1 ml-4 mr-4 pb-[200px]">
                 {loading ? (
                     <div className="text-center mt-4">Loading data...</div>
                 ) : transactionDetail ? (
@@ -152,6 +207,11 @@ const DashboardPage: React.FC = () => {
                         <div className="mt-4 bg-white p-4 rounded-lg flex flex-col gap-1 shadow-lg">
                             <span className="font-semibold">Total Pendapatan</span>
                             <span>Rp. {transactionDetail?.total_revenue}</span>
+                        </div>
+
+                        <div className="mt-6 w-full h-96 bg-white p-4 shadow-lg rounded-lg">
+                            <h2 className="text-lg font-semibold mb-4">Grafik Transaksi Harian</h2>
+                            <canvas ref={chartRef}></canvas>
                         </div>
                     </>
                 ) : (

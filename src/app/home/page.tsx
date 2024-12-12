@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Input } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+
+import Chart from "chart.js";
 
 import { getResource } from "@/services/fetch";
 
@@ -28,12 +30,18 @@ interface Transaction {
     status_transaction: string;
 }
 
+interface TransactionDaily {
+    date: string;
+    count: number;
+}
+
 interface TransactionDashboard {
     total_transactions: number;
     total_items_sold: number;
     total_revenue: number;
     top_selling_product: string;
     top_promotion: string;
+    daily_transactions: Array<TransactionDaily>
 }
 
 
@@ -61,6 +69,11 @@ const HomePage = () => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
+    const transactionsPerDay = [
+        { date: "2024-12-01", count: 5 },
+        { date: "2024-12-02", count: 3 },
+    ];
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
         const user = localStorage.getItem("user");
@@ -131,6 +144,49 @@ const HomePage = () => {
 
         return () => clearInterval(intervalId);
     }, [startDate, endDate]);
+
+    useEffect(() => {
+        if (chartRef.current && transactionDetail?.daily_transactions) {
+            const ctx = chartRef.current.getContext("2d");
+            if (ctx) {
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: transactionDetail.daily_transactions.map((data) => data.date),
+                        datasets: [
+                            {
+                                label: "Jumlah Transaksi",
+                                data: transactionDetail.daily_transactions.map((data) => data.count),
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            position: "top",
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    display: true,
+                                    gridLines: { display: false },
+                                },
+                            ],
+                            yAxes: [
+                                {
+                                    display: true,
+                                    ticks: { beginAtZero: true },
+                                },
+                            ],
+                        },
+                    },
+                });
+            }
+        }
+    }, [transactionsPerDay]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -285,7 +341,7 @@ const HomePage = () => {
                         {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
                     </div>
 
-                    <div id="dashboard-content" className="flex flex-col gap-1 ml-4 mr-4">
+                    <div id="dashboard-content" className="flex flex-col gap-1 ml-4 mr-4 pb-[200px]">
                         {loading ? (
                             <div className="text-center mt-4">Loading data...</div>
                         ) : transactionDetail ? (
@@ -315,6 +371,11 @@ const HomePage = () => {
                                 <div className="mt-4 bg-white p-4 rounded-lg flex flex-col gap-1 shadow-lg">
                                     <span className="font-semibold">Total Pendapatan</span>
                                     <span>Rp. {transactionDetail?.total_revenue}</span>
+                                </div>
+
+                                <div className="mt-6 w-full h-96 bg-white p-4 shadow-lg rounded-lg">
+                                    <h2 className="text-lg font-semibold mb-4">Grafik Transaksi Harian</h2>
+                                    <canvas ref={chartRef}></canvas>
                                 </div>
                             </>
                         ) : (
