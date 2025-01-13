@@ -17,7 +17,8 @@ interface CartItem {
 interface CheckoutItem {
     promo: number;
     subTotal: number;
-    total: number
+    total: number;
+    typetransaction: string;
 }
 
 const PaymentPage = () => {
@@ -64,7 +65,8 @@ const PaymentPage = () => {
             status_transactions: "pending",
             discount_amount: dataCheckout?.promo,
             id_promo: 1,
-            payment: "tunai"
+            payment: "tunai",
+            type_transaction: dataCheckout?.typetransaction
         }
 
         try {

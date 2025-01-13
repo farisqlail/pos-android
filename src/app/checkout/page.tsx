@@ -25,6 +25,7 @@ const CheckoutPage = () => {
     const [promoItems, setPromoItem] = useState<PromoItem[]>([]);
     const [promo, setPromo] = useState(0);
     const [selectedPromoId, setSelectedPromoId] = useState<number | null>(null);
+    const [transactionType, setTransactionType] = useState<'dineIn' | 'takeaway'>('dineIn'); // State for transaction type  
 
     const getCartData = () => {
         const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -66,7 +67,8 @@ const CheckoutPage = () => {
             total: grandTotal,
             subTotal: subTotal,
             promo: promo,
-            products: cart
+            products: cart,
+            typetransaction: transactionType
         }
 
         localStorage.setItem("dataCheckout", JSON.stringify(dataCheckout));
@@ -84,6 +86,20 @@ const CheckoutPage = () => {
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
             <NavbarPayment title="Checkout" route="/home" />
+
+            <div className="flex items-center justify-between p-4">
+                <span className="font-semibold">Tipe Transaksi:</span>
+                <div className="flex items-center">
+                    <label className="mr-2">Dine In</label>
+                    <input
+                        type="checkbox"
+                        checked={transactionType === 'takeaway'}
+                        onChange={() => setTransactionType(transactionType === 'dineIn' ? 'takeaway' : 'dineIn')}
+                        className="toggle"
+                    />
+                    <label className="ml-2">Takeaway</label>
+                </div>
+            </div>
 
             <span className="font-semibold pl-4">Pakai Promo</span>
             <div className="pl-4 pt-2 pr-2 flex gap-2 overflow-x-auto whitespace-nowrap">
@@ -166,4 +182,4 @@ const CheckoutPage = () => {
     );
 };
 
-export default CheckoutPage;
+export default CheckoutPage;  
