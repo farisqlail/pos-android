@@ -68,7 +68,7 @@ const CheckoutPage = () => {
             subTotal: subTotal,
             promo: promo,
             products: cart,
-            typetransaction: transactionType == "dineIn" ? "Dine In" : "Takeaway"
+            typetransaction: transactionType == "dineIn" ? "dine in" : "takeaway"
         }
 
         localStorage.setItem("dataCheckout", JSON.stringify(dataCheckout));
