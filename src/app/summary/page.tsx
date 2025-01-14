@@ -24,13 +24,13 @@ interface Transaction {
 
 const SummaryPage: React.FC = () => {
     const [transactionDetail, setTransactionDetail] = useState<Transaction | null>(null);
-    const [startDate, ] = useState<string>(() => {
+    const [startDate,] = useState<string>(() => {
         const today = new Date();
         today.setDate(today.getDate() - 7);
         return today.toISOString().split("T")[0];
     });
 
-    const [endDate, ] = useState<string>(() => {
+    const [endDate,] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
@@ -119,14 +119,10 @@ const SummaryPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex gap-2 mt-3">
+                        <div className="mt-3">
                             <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
                                 <span className="font-semibold">Tunai</span>
                                 <span>Rp. {transactionDetail?.payment_method_revenue.tunai}</span>
-                            </div>
-                            <div className="bg-white shadow-lg rounded-lg p-4 w-full flex flex-col gap-1">
-                                <span className="font-semibold">Qris</span>
-                                <span>Rp. {transactionDetail?.payment_method_revenue.qris}</span>
                             </div>
                         </div>
 
