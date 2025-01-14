@@ -29,6 +29,7 @@ interface TransactionDetail {
     discount_amount: string;
     created_at: string;
     menus: Array<Menu>;
+    type_transaction: string;
 }
 
 const HistoryDetail: React.FC = () => {
@@ -92,7 +93,7 @@ const HistoryDetail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
+        <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black pb-[100px]">
             <Navbar />
 
             <div className="flex justify-between items-center ml-4 mr-4 mb-4 cursor-pointer" onClick={toHistory}>
@@ -160,6 +161,12 @@ const HistoryDetail: React.FC = () => {
                     <div className="flex flex-col gap-1 w-[300px] max-w-[300px]">
                         <span className="text-gray-500">Diskon</span>
                         <span className="text-sm">Rp. {parseFloat(transactionDetail?.discount_amount || "0").toLocaleString("id-ID", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
+                    </div>
+                </div>
+                <div className="flex gap-2 mt-2">
+                    <div className="flex flex-col gap-1 w-[300px] max-w-[300px]">
+                        <span className="text-gray-500">Tipe Transaksi</span>
+                        <span className="text-sm">{transactionDetail?.type_transaction}</span>
                     </div>
                 </div>
             </div>

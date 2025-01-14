@@ -217,7 +217,7 @@ const HomePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black">
+        <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black pb-[100px]">
             <Navbar />
 
             {isModalOpen && (

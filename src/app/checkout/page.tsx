@@ -68,7 +68,7 @@ const CheckoutPage = () => {
             subTotal: subTotal,
             promo: promo,
             products: cart,
-            typetransaction: transactionType
+            typetransaction: transactionType == "dineIn" ? "Dine In" : "Takeaway"
         }
 
         localStorage.setItem("dataCheckout", JSON.stringify(dataCheckout));
@@ -90,7 +90,6 @@ const CheckoutPage = () => {
             <div className="flex items-center justify-between p-4">
                 <span className="font-semibold">Tipe Transaksi:</span>
                 <div className="flex items-center">
-                    <label className="mr-2">Dine In</label>
                     <input
                         type="checkbox"
                         checked={transactionType === 'takeaway'}
