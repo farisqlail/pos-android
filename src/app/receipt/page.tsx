@@ -27,15 +27,6 @@ const ReceiptPage = () => {
             const parsedData = JSON.parse(dataTransaction);
             setDataTransaction(parsedData.data)
         }
-
-        const handlePopState = (event: PopStateEvent) => {
-            router.push("/home");
-        };
-
-        window.addEventListener("popstate", handlePopState);
-        return () => {
-            window.removeEventListener("popstate", handlePopState);
-        };
     }, [])
 
     const toHome = () => {

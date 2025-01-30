@@ -32,11 +32,6 @@ const DashboardPage: React.FC = () => {
         today.setDate(today.getDate() - 7);
         return today.toISOString().split("T")[0];
     });
-    const transactionsPerDay = [
-        { date: "2024-12-01", count: 5 },
-        { date: "2024-12-02", count: 3 },
-    ];
-
     const [endDate, setEndDate] = useState<string>(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
@@ -114,7 +109,7 @@ const DashboardPage: React.FC = () => {
                 });
             }
         }
-    }, [transactionsPerDay]);
+    }, [transactionDetail?.daily_transactions]);
 
     const printPDF = async () => {
         setLoading(true);

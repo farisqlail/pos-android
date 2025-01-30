@@ -2,8 +2,8 @@ interface CustomError extends Error {
   status?: number;
 }
 
-// const BASE_URL = "https://laildev.my.id/public/api";
-const BASE_URL = "http://localhost:8000/api";
+const BASE_URL = "https://laildev.my.id/public/api";
+// const BASE_URL = "http://localhost:8000/api";
 
 export async function getResource<T>(endpoint: string): Promise<T> {
   try {

@@ -76,10 +76,6 @@ const HomePage = () => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
-    const transactionsPerDay = [
-        { date: "2024-12-01", count: 5 },
-        { date: "2024-12-02", count: 3 },
-    ];
     const chartRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
@@ -193,7 +189,7 @@ const HomePage = () => {
                 });
             }
         }
-    }, [transactionsPerDay]);
+    }, [transactionDetail?.daily_transactions]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
