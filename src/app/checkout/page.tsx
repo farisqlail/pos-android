@@ -130,6 +130,7 @@ const CheckoutPage = () => {
                                 <div className="flex gap-2">
                                     <span className="font-normal">{item.name}</span> |
                                     <span>{item.quantity}</span>
+                                    <span className="font-semibold">Rp. {(item.price * item.quantity).toLocaleString()}</span>
                                 </div>
 
                                 <div

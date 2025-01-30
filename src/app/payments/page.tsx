@@ -27,6 +27,8 @@ const PaymentPage = () => {
     const [dataCheckout, setDataCheckout] = useState<CheckoutItem | null>(null);
     const [total, setTotal] = useState<string>("");
     const [userId, setUserid] = useState<string>("");
+    const [payment, setPayment] = useState<number | string>("");
+    const [change, setChange] = useState<number>(0);
 
     useEffect(() => {
         const dataCheckout = localStorage.getItem("dataCheckout");
@@ -56,6 +58,18 @@ const PaymentPage = () => {
         setCart(updatedCartData);
     }, []);
 
+    const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPayment(value);
+
+        const paymentValue = parseFloat(value);
+        if (!isNaN(paymentValue)) {
+            setChange(paymentValue - parseInt(total));
+        } else {
+            setChange(0); 
+        }
+    };
+
     const toRecipt = async () => {
         const dataTransaction = {
             menus: cart,
@@ -66,12 +80,13 @@ const PaymentPage = () => {
             discount_amount: dataCheckout?.promo,
             id_promo: 1,
             payment: "tunai",
-            type_transaction: dataCheckout?.typetransaction
+            type_transaction: dataCheckout?.typetransaction,
+            payAmount: payment
         }
-
+        
         try {
             const data = await postResource("transactions/create", dataTransaction);
-            
+
             if (data) {
                 localStorage.setItem("dataTransaction", JSON.stringify(data.data));
                 router.push("/receipt");
@@ -90,6 +105,20 @@ const PaymentPage = () => {
             <div className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-center items-center ml-4 mr-4 mb-4">
                 <span className="font-semibold text-lg">Total pembayaran</span>
                 <span className="font-semibold text-lg">Rp. {total}</span>
+
+                <div className="mt-4 flex items-center gap-3">
+                    <label className="block mb-2">Dibayar</label>
+                    <input
+                        type="number"
+                        value={payment}
+                        onChange={handlePaymentChange}
+                        className="border p-2 rounded w-full"
+                        placeholder="Masukkan jumlah pembayaran"
+                    />
+                </div>
+                <div className="mt-4">
+                    <h2 className="text-xl">Kembalian: Rp. {change.toLocaleString()}</h2>
+                </div>
             </div>
 
             <div className="flex flex-col pl-4 pr-4">

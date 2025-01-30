@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Button } from "@nextui-org/react";
+
+import { getResource } from "@/services/fetch";
 
 interface CartItem {
     name: string;
     quantity: number;
+}
+
+interface stock {
+    id: number;
+    menu: {
+        name: string;
+    }
+    stock: string;
 }
 
 const Navbar = () => {
@@ -14,6 +24,9 @@ const Navbar = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [userRole, setUserRole] = useState<string>("");
+    const { isOpen: isOpenNotif, onOpen: onOpenNotif, onOpenChange: onOpenChangeNotif } = useDisclosure();
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [stocks, setStocks] = useState<stock[]>([]);
 
     useEffect(() => {
         const user = localStorage.getItem("user");
@@ -25,6 +38,24 @@ const Navbar = () => {
                 console.error("Error parsing user data:", error);
             }
         }
+
+        const fetch = async () => {
+            try {
+                const response = await getResource<{ data: stock[] }>("stock");
+
+                setStocks(response.data)
+                setNotificationCount(response.data.length)
+            } catch (error) {
+                console.error("Error fetching menus:", error);
+            }
+        };
+
+        fetch();
+        const intervalId = setInterval(fetch, 2000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
     }, [])
 
     const getCartData = () => {
@@ -72,36 +103,50 @@ const Navbar = () => {
                         Warung Sate Muslim
                     </div>
 
-                    {userRole !== "owner" && (
-                        <div className="border border-black rounded-full p-2" onClick={onOpen}>
-                            <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M2 3L2.26491 3.0883C3.58495 3.52832 4.24497 3.74832 4.62248 4.2721C5 4.79587 5 5.49159 5 6.88304V9.5C5 12.3284 5 13.7426 5.87868 14.6213C6.75736 15.5 8.17157 15.5 11 15.5H13M19 15.5H17"
-                                        stroke="#1c1c1c"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                    />
-                                    <path
-                                        d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z"
-                                        stroke="#1c1c1c"
-                                        strokeWidth="1.5"
-                                    />
-                                    <path
-                                        d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z"
-                                        stroke="#1c1c1c"
-                                        strokeWidth="1.5"
-                                    />
-                                    <path
-                                        d="M5 6H8M5.5 13H16.0218C16.9812 13 17.4609 13 17.8366 12.7523C18.2123 12.5045 18.4013 12.0636 18.7792 11.1818L19.2078 10.1818C20.0173 8.29294 20.4221 7.34853 19.9775 6.67426C19.5328 6 18.5054 6 16.4504 6H12"
-                                        stroke="#1c1c1c"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                    />
-                                </g>
-                            </svg>
+                    {userRole !== "owner" && userRole !== "kitchen" && (
+                        <div className="flex gap-2">
+                            <div className="relative">
+                                <div className="border border-black rounded-full p-2 cursor-pointer" onClick={onOpenNotif}>
+                                    <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12.0009 5C13.4331 5 14.8066 5.50571 15.8193 6.40589C16.832 7.30606 17.4009 8.52696 17.4009 9.8C17.4009 11.7691 17.846 13.2436 18.4232 14.3279C19.1606 15.7133 19.5293 16.406 19.5088 16.5642C19.4849 16.7489 19.4544 16.7997 19.3026 16.9075C19.1725 17 18.5254 17 17.2311 17H6.77066C5.47638 17 4.82925 17 4.69916 16.9075C4.54741 16.7997 4.51692 16.7489 4.493 16.5642C4.47249 16.406 4.8412 15.7133 5.57863 14.3279C6.1558 13.2436 6.60089 11.7691 6.60089 9.8C6.60089 8.52696 7.16982 7.30606 8.18251 6.40589C9.19521 5.50571 10.5687 5 12.0009 5ZM12.0009 5V3M9.35489 20C10.0611 20.6233 10.9888 21.0016 12.0049 21.0016C13.0209 21.0016 13.9486 20.6233 14.6549 20" stroke="#000000" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    {notificationCount > 0 && (
+                                        <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs px-1">
+                                            {notificationCount}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="border border-black rounded-full p-2" onClick={onOpen}>
+                                <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M2 3L2.26491 3.0883C3.58495 3.52832 4.24497 3.74832 4.62248 4.2721C5 4.79587 5 5.49159 5 6.88304V9.5C5 12.3284 5 13.7426 5.87868 14.6213C6.75736 15.5 8.17157 15.5 11 15.5H13M19 15.5H17"
+                                            stroke="#1c1c1c"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                        />
+                                        <path
+                                            d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z"
+                                            stroke="#1c1c1c"
+                                            strokeWidth="1.5"
+                                        />
+                                        <path
+                                            d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z"
+                                            stroke="#1c1c1c"
+                                            strokeWidth="1.5"
+                                        />
+                                        <path
+                                            d="M5 6H8M5.5 13H16.0218C16.9812 13 17.4609 13 17.8366 12.7523C18.2123 12.5045 18.4013 12.0636 18.7792 11.1818L19.2078 10.1818C20.0173 8.29294 20.4221 7.34853 19.9775 6.67426C19.5328 6 18.5054 6 16.4504 6H12"
+                                            stroke="#1c1c1c"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                        />
+                                    </g>
+                                </svg>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -174,6 +219,32 @@ const Navbar = () => {
                                         Checkout
                                     </button>
                                 </div>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isOpenNotif} onOpenChange={onOpenChangeNotif}>
+                <ModalContent>
+                    {() => (
+                        <>
+                            <ModalHeader className="text-black">Notifikasi</ModalHeader>
+                            <ModalBody>
+                                {stocks.length === 0 ? (
+                                    <p>Tidak ada data stok.</p>
+                                ) : (
+                                    stocks.map(stock => (
+                                        <div key={stock.id} className="text-red-500">
+                                            {stock.menu.name} - Stok Kosong
+                                        </div>
+                                    ))
+                                )}
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button className="bg-black text-white w-full" onPress={onOpenChangeNotif}>
+                                    Tutup
+                                </Button>
                             </ModalFooter>
                         </>
                     )}

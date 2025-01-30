@@ -12,11 +12,18 @@ import { getResource } from "@/services/fetch";
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 
+interface Stock {
+    id: number;
+    id_menu: number;
+    stock: number;
+    date: string;
+}
+
 interface Menu {
     id: number;
     name: string;
-    description: string;
-    price: number;
+    price: string;
+    stock: Stock;
 }
 
 interface CartItem extends Menu {
@@ -414,11 +421,14 @@ const HomePage = () => {
                                                 </div>
                                                 <div className="flex flex-col gap-2">
                                                     <span className="font-semibold">{menu.name}</span>
-                                                    <span className="text-green-500">Rp. {menu.price}</span>
+                                                    <span className="text-green-500">{Number(menu.price).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
                                                 </div>
                                             </div>
 
-                                            <div className="border border-black rounded-lg" onClick={() => handleAddToCart(menu)}>
+                                            <div
+                                                className={`border border-black rounded-lg p-2 cursor-pointer ${menu.stock && menu.stock.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                                onClick={() => menu.stock && menu.stock.stock !== 0 && handleAddToCart(menu)}
+                                            >
                                                 <svg
                                                     width="30px"
                                                     height="30px"

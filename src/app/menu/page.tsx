@@ -67,7 +67,7 @@ const MenuPage = () => {
 
         const fetchMenus = async () => {
             try {
-                const data = await getResource<{ data: MenuItem[] }>("menus");
+                const data = await getResource<{ data: MenuItem[] }>("menus-all");
                 setMenuItems(data.data);
                 setLoading(false);
             } catch (error) {

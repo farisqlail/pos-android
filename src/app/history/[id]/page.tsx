@@ -92,6 +92,7 @@ const HistoryDetail: React.FC = () => {
         fetchTransactions();
     }
 
+
     return (
         <div className="min-h-screen bg-[#f2f2f2] flex flex-col gap-1 text-black pb-[100px]">
             <Navbar />
@@ -144,6 +145,10 @@ const HistoryDetail: React.FC = () => {
                                     day: "2-digit",
                                     month: "2-digit",
                                     year: "numeric",
+                                }) + " " + new Date(transactionDetail.created_at).toLocaleTimeString("id-ID", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
                                 })
                                 : ""}
                         </span>
